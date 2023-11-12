@@ -7,7 +7,7 @@
 
 void setup() {
   size(1200, 750, P3D);
-  surface.setTitle("Porject 3 - Inverse Kinematics");
+  surface.setTitle("Project 3 - Inverse Kinematics");
 }
 
 //Root
@@ -40,6 +40,7 @@ boolean goalReached = false;
 
 Vec2 start_l1, start_l2, start_left1, endPoint_left, start_right1, endPoint_right;
 
+boolean goalMoving = true;
 boolean paused = true;
 void keyPressed() {
   if (key == 'z') {
@@ -47,6 +48,9 @@ void keyPressed() {
   }
   if (key == ' ') {
     paused = !paused;
+  }
+  if (key == 'r') {
+    goalMoving = !goalMoving;
   }
 }
 
@@ -65,23 +69,24 @@ void draw() {
   if (!paused) {
     fk();
     if (!goalReached) solve();
-    
+
     //move it to red spot
-    if (leftReaching && goal.distanceTo(endPoint_left) < 10) {
-      goalReached = true;
-      goal = new Vec2(endPoint_left.x, endPoint_left.y);
-      solveGoal(new Vec2(300, 500));
-      goal = new Vec2(endPoint_left.x, endPoint_left.y);
-    } else if (goal.distanceTo(endPoint_right) < 10) {
-      goalReached = true;
-      goal = new Vec2(endPoint_right.x, endPoint_right.y);
-      solveGoal(new Vec2(300, 500));
-      goal = new Vec2(endPoint_right.x, endPoint_right.y);
-    } else {
-      goalReached = false;
+    if (goalMoving) {
+      if (leftReaching && goal.distanceTo(endPoint_left) < 10) {
+        goalReached = true;
+        goal = new Vec2(endPoint_left.x, endPoint_left.y);
+        solveGoal(new Vec2(300, 500));
+        goal = new Vec2(endPoint_left.x, endPoint_left.y);
+      } else if (goal.distanceTo(endPoint_right) < 10) {
+        goalReached = true;
+        goal = new Vec2(endPoint_right.x, endPoint_right.y);
+        solveGoal(new Vec2(300, 500));
+        goal = new Vec2(endPoint_right.x, endPoint_right.y);
+      } else {
+        goalReached = false;
+      }
     }
-    
-    if(goal.distanceTo(new Vec2(300, 500)) < 1) {
+    if (goal.distanceTo(new Vec2(300, 500)) < 1) {
       goalReached = false;
       goal = new Vec2(random(300, 900), random(300, 600));
     }
@@ -150,5 +155,4 @@ void draw() {
   // goal
   fill(0, 0, 255);
   circle(goal.x, goal.y, 2*gr);
-
 }
